@@ -13,25 +13,21 @@ namespace TextChatXR.Commands.SubCommands
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class TeamChat : ParentCommand
+    public class TeamChat : ICommand
     {
-        public TeamChat() => LoadGeneratedCommands();
-        public override string Command { get; } = "teamchat";
+        public string Command { get; } = "teamchat";
 
-        public override string[] Aliases { get; } = new string[] { "tc" };
+        public  string[] Aliases { get; } = new string[] { "tc" };
 
-        public override string Description { get; } = "Text Chat for team";
+        public string Description { get; } = "Text Chat for team";
 
         public EventHandlers ev;
 
 
-        public override void LoadGeneratedCommands()
-        {
-
-        }
+       
 
       
-        protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player CommandSender = Player.Get((CommandSender)sender);
 
@@ -67,7 +63,7 @@ namespace TextChatXR.Commands.SubCommands
                 }
                 if (EventHandlers.CDP_And_CIContents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    content = "<align=left>[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team) + "</align>\n";
+                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
@@ -82,7 +78,7 @@ namespace TextChatXR.Commands.SubCommands
                 }
                 if (EventHandlers.MTF_Contents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    content = "<align=left>[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team) + "</align>\n";
+                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
@@ -96,7 +92,7 @@ namespace TextChatXR.Commands.SubCommands
                 }
                 if (EventHandlers.SCP_Contents.Count <= 10)
                 {
-                    content = "<align=left>[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team) + "</align>\n";
+                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
@@ -110,14 +106,14 @@ namespace TextChatXR.Commands.SubCommands
                 }
                 if (EventHandlers.TUT_Contents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    content = "<align=left>[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team) + "</align>\n";
+                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
                 return true;
             }
 
-          
+            Log.Info($"[Team Chat]{CommandSender.Nickname}: {content}");
 
             Log.Info($"[Team Chat]{CommandSender.Nickname}: {content}");
             response = "OK";

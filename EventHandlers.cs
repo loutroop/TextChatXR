@@ -46,7 +46,7 @@ namespace TextChatXR
             Timing.KillCoroutines("Show");
             Timing.KillCoroutines("Remove");
         }
-        private IEnumerator<float> Show()
+        public IEnumerator<float> Show()
         {
             while (Round.Started)
             {

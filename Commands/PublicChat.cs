@@ -12,22 +12,18 @@ namespace TextChatXR.Commands.SubCommands
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class PublicChat : ParentCommand
+    public class PublicChat : ICommand
     {
-        public PublicChat() => LoadGeneratedCommands();
-        public override  string Command { get; } = "publicchat";
+        public  string Command { get; } = "publicchat";
 
-        public override string[] Aliases { get; } = new string[] { "pc" };
+        public string[] Aliases { get; } = new string[] { "pc" };
 
-        public override string Description { get; } = "Text Chat for public";
+        public string Description { get; } = "Text Chat for public";
 
         public EventHandlers ev;
-        public override void LoadGeneratedCommands()
-        {
-            
-        }
+      
 
-        protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player CommandSender = Player.Get((CommandSender)sender);
           
@@ -61,7 +57,7 @@ namespace TextChatXR.Commands.SubCommands
 
 
           
-            content = "<align=left>[Public Chat]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Public) + "</align>\n";
+            content = "[Public Chat]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Public);
 
             Extensions.Add(content);
 
@@ -74,5 +70,6 @@ namespace TextChatXR.Commands.SubCommands
             response = "OK";
             return true;
         }
+
     }
 }

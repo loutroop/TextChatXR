@@ -16,51 +16,45 @@ namespace TextChatXR
         public static EventHandlers ev;
 
         
-        public static IEnumerator<float> Send(this Player player, float time, string color = "green")
+        public static void Send(this Player player, float time, string color = "green")
         {
-            while (true)
+            if (EventHandlers.CDP_And_CIContents.Count > 0)
             {
-                yield return Timing.WaitForSeconds(1f);
-
-
-                if (EventHandlers.CDP_And_CIContents.Count > 0)
+                if (player.Team == Team.CDP || player.Team == Team.CHI)
                 {
-                    if (player.Team == Team.CDP || player.Team == Team.CHI)
-                    {
-                        if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.CDP_And_CIContents)}{"</size></voffset></pos>"}", time);
-                        else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.CDP_And_CIContents)}</size>", ((ushort)time));
-                        //    player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
-                    }
+                    if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.CDP_And_CIContents)}{"</size></voffset></pos>"}", time);
+                    else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.CDP_And_CIContents)}</size>", ((ushort)time));
+                    //    player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
                 }
+            }
 
-               if (EventHandlers.MTF_Contents.Count > 0)
+            if (EventHandlers.MTF_Contents.Count > 0)
+            {
+                if (player.Team == Team.MTF || player.Team == Team.RSC)
                 {
-                    if (player.Team == Team.MTF || player.Team == Team.RSC)
-                    {
-                        if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.MTF_Contents)}{"</size></voffset></pos>"}", time);
-                        else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.MTF_Contents)}</size>", ((ushort)time));
-                        //     player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
-                    }
+                    if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.MTF_Contents)}{"</size></voffset></pos>"}", time);
+                    else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.MTF_Contents)}</size>", ((ushort)time));
+                    //     player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
                 }
+            }
 
-               if (EventHandlers.SCP_Contents.Count > 0)
+            if (EventHandlers.SCP_Contents.Count > 0)
+            {
+                if (player.Team == Team.SCP)
                 {
-                    if (player.Team == Team.SCP)
-                    {
-                        if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.SCP_Contents)}{"</size></voffset></pos>"}", time);
-                        else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.SCP_Contents)}</size>", ((ushort)time));
-                        //     player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
-                    }
+                    if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.SCP_Contents)}{"</size></voffset></pos>"}", time);
+                    else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.SCP_Contents)}</size>", ((ushort)time));
+                    //     player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
                 }
+            }
 
-               if (EventHandlers.TUT_Contents.Count > 0)
+            if (EventHandlers.TUT_Contents.Count > 0)
+            {
+                if (player.Team == Team.TUT)
                 {
-                    if (player.Team == Team.TUT)
-                    {
-                        if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.TUT_Contents)}{"</size></voffset></pos>"}", time);
-                        else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.TUT_Contents)}</size>", ((ushort)time));
-                        //   player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
-                    }
+                    if (Plugin.CustomConfig.Use_Hint) player.ShowHint($"{"<size=25><voffset=70><pos=-30>"}{BuildNewChatList(EventHandlers.TUT_Contents)}{"</size></voffset></pos>"}", time);
+                    else player.Broadcast($"<size=25>{BuildNewChatList(EventHandlers.TUT_Contents)}</size>", ((ushort)time));
+                    //   player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", color);
                 }
             }
         }
@@ -109,22 +103,27 @@ namespace TextChatXR
         {
             while (Round.Started)
             {
-                yield return Timing.WaitForSeconds(8f);
-
                 EventHandlers.SCP_Contents.RemoveAt(0);
                 EventHandlers.MTF_Contents.RemoveAt(0);
                 EventHandlers.TUT_Contents.RemoveAt(0);
                 EventHandlers.CDP_And_CIContents.RemoveAt(0);
+
+                yield return Timing.WaitForSeconds(8f);
             }
             yield return Timing.WaitForSeconds(0.5f);
         }
         public static string GetMessage(this ArraySegment<string> arg)
         {
-            return arg.ToString();
+            string result = "";
+            for(int i = 0;i < arg.Count; i++)
+            {
+                result += arg.ToArray()[i];
+            }
+            return result;
         }
         public static string GetMessage(Player Sender, string message, ShowType ShowType = ShowType.Public)
         {
-            string Target = null;
+            string Target = "";
             string Color = null;
             if (ShowType == ShowType.Public)
             {
@@ -153,15 +152,16 @@ namespace TextChatXR
                         break;
 
                 }
-                Target = string.Concat(
+                Target += string.Concat(
                $"<color={Color}>{Sender.Nickname}: {message}</color>");
             }
             else
             {
-                Target = string.Concat(
+                Target += string.Concat(
                $"{Sender.Nickname}: {message}");
             }
             return Target;
         }
+
     }
 }
