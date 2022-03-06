@@ -14,7 +14,7 @@ namespace TextChatXR
     {
 
         public static EventHandlers ev;
-
+      
         
         public static void Send(this Player player, float time, string color = "green")
         {
@@ -58,17 +58,21 @@ namespace TextChatXR
                 }
             }
         }
+
         public static string BuildNewChatList(List<string> strs)
         {
+            string[] mark = strs.ToArray();
             string list = "";
-           for (int i = 0; i < strs.Count; i++)
+            for (int i = 0; i < strs.Count; i++)
             {
                 list += string.Concat(
-                    $"{strs[i]}\n"
+                    $"{mark[i]}\n"
            );
             }
             return list;
         }
+
+
         public static void Add(string message ,Team team)
         {
             if (team == Team.CDP || team == Team.CHI)
@@ -99,18 +103,12 @@ namespace TextChatXR
             EventHandlers.MTF_Contents.Add(message);
             EventHandlers.TUT_Contents.Add(message);
         }
-        public static IEnumerator<float> Remove()
+        public static void Remove()
         {
-            while (Round.Started)
-            {
-                EventHandlers.SCP_Contents.RemoveAt(0);
-                EventHandlers.MTF_Contents.RemoveAt(0);
-                EventHandlers.TUT_Contents.RemoveAt(0);
-                EventHandlers.CDP_And_CIContents.RemoveAt(0);
-
-                yield return Timing.WaitForSeconds(8f);
-            }
-            yield return Timing.WaitForSeconds(0.5f);
+            EventHandlers.SCP_Contents.Remove(EventHandlers.SCP_Contents[0]);
+            EventHandlers.MTF_Contents.Remove(EventHandlers.MTF_Contents[0]);
+            EventHandlers.TUT_Contents.Remove(EventHandlers.TUT_Contents[0]);
+            EventHandlers.CDP_And_CIContents.Remove(EventHandlers.CDP_And_CIContents[0]);
         }
         public static string GetMessage(this ArraySegment<string> arg)
         {

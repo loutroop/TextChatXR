@@ -39,7 +39,7 @@ namespace TextChatXR
         public void OnRoundStarted()
         {
             Timing.RunCoroutine(Show(), "Show");
-            Timing.RunCoroutine(Extensions.Remove(), "Remove");
+            Timing.RunCoroutine(RemoveText(), "Remove");
         }
         public void OnRoundEnded(RoundEndEvent ev)
         {
@@ -59,5 +59,16 @@ namespace TextChatXR
             }
             yield return Timing.WaitForSeconds(0.1f);
         }
+        public IEnumerator<float> RemoveText()
+        {
+            while (Round.Started)
+            {
+                Extensions.Remove();
+
+                yield return Timing.WaitForSeconds(4f);
+            }
+            yield return Timing.WaitForSeconds(1f);
+        }
+       
     }
 }

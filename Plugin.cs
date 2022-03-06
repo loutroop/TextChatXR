@@ -25,7 +25,7 @@ namespace TextChatXR
         public override string Developer => "Loutroop2107";
         public override string Name => nameof(TextChatXR);
         public override Version NeededQurreVersion => new Version(1, 12, 1);
-        public override Version Version => new Version(0, 2);
+        public override Version Version => new Version(0, 3);
         public static Config CustomConfig { get; private set; }
 
         public override void Enable()
