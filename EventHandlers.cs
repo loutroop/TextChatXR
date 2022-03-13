@@ -23,10 +23,11 @@ namespace TextChatXR
        public string TUT_all = $"<size=25><pos=-30>";
         public string end = "</size></pos>";
            */
-        public static List<string> MTF_Contents = new List<string>();
-        public static List<string> CDP_And_CIContents = new List<string>();
-        public static List<string> SCP_Contents = new List<string>();
-        public static List<string> TUT_Contents = new List<string>();
+        public static List<Message> MTF_Contents = new List<Message>();
+        public static List<Message> CDP_And_CIContents = new List<Message>();
+        public static List<Message> SCP_Contents = new List<Message>();
+        public static List<Message> TUT_Contents = new List<Message>();
+        public static int Deletetg = 0;
         #endregion
         public void WaitingForPlayers()
         {
@@ -35,6 +36,7 @@ namespace TextChatXR
             CDP_And_CIContents.Clear();
             SCP_Contents.Clear();
             TUT_Contents.Clear();
+            Deletetg = 0;
         }
         public void OnRoundStarted()
         {
@@ -50,9 +52,36 @@ namespace TextChatXR
         {
             while (Round.Started)
             {
-                foreach (Player player in Player.List.Where(x => x.Team != Team.RIP))
+               if (MTF_Contents.Count > 0)
                 {
-                    player.Send(1);
+                    foreach (Player player in Player.List.Where(x => x.Team == Team.MTF || x.Team == Team.RSC))
+                    {
+                        player.Send(1);
+                    }
+                }
+               
+                if (SCP_Contents.Count > 0)
+                {
+                    foreach (Player player in Player.List.Where(x => x.Team == Team.SCP))
+                    {
+                        player.Send(1);
+                    }
+                }
+               
+                if (CDP_And_CIContents.Count > 0)
+                {
+                    foreach (Player player in Player.List.Where(x => x.Team == Team.CDP || x.Team == Team.CHI))
+                    {
+                        player.Send(1);
+                    }
+                }
+                
+                if (TUT_Contents.Count > 0)
+                {
+                    foreach (Player player in Player.List.Where(x => x.Team == Team.TUT))
+                    {
+                        player.Send(1);
+                    }
                 }
 
                 yield return Timing.WaitForSeconds(1f);
@@ -61,13 +90,24 @@ namespace TextChatXR
         }
         public IEnumerator<float> RemoveText()
         {
-            while (Round.Started)
+            for (; Round.Started;)
             {
                 Extensions.Remove();
 
-                yield return Timing.WaitForSeconds(4f);
+                yield return Timing.WaitForSeconds(1f);
             }
-            yield return Timing.WaitForSeconds(1f);
+            yield return Timing.WaitForSeconds(0.5f);
+        }
+
+        public static Message Message(string content, Player sender, string color, ShowType showType)
+        {
+            return new Message()
+            {
+                content = content,
+                sender = sender,
+                color = color,
+                showType = showType
+            };
         }
        
     }

@@ -14,8 +14,8 @@ namespace TextChatXR
     {
 
         public static EventHandlers ev;
-      
-        
+
+
         public static void Send(this Player player, float time, string color = "green")
         {
             if (EventHandlers.CDP_And_CIContents.Count > 0)
@@ -59,12 +59,16 @@ namespace TextChatXR
             }
         }
 
-        public static string BuildNewChatList(List<string> strs)
+        public static string BuildNewChatList(List<Message> messages)
         {
+            List<string> strs = new List<string>();
             string[] mark = strs.ToArray();
+            string result = "";
             string list = "";
             for (int i = 0; i < strs.Count; i++)
             {
+                result += $"{messages[i].showType}<color=>{messages[i].sender.Nickname}: {messages[i].content}".Replace("PublicChat", "[Public Chat]").Replace("TeamChat", "[TeamChat]");
+                strs.Add(result);
                 list += string.Concat(
                     $"{mark[i]}\n"
            );
@@ -73,7 +77,7 @@ namespace TextChatXR
         }
 
 
-        public static void Add(string message ,Team team)
+        public static void Add(Message message, Team team)
         {
             if (team == Team.CDP || team == Team.CHI)
             {
@@ -82,21 +86,21 @@ namespace TextChatXR
             }
             else if (team == Team.MTF || team == Team.RSC)
             {
-              //  "<size=25><pos=-30>" += message;
+                //  "<size=25><pos=-30>" += message;
                 EventHandlers.MTF_Contents.Add(message);
             }
             else if (team == Team.SCP)
             {
-              //  "<size=25><pos=-30>" += message;
+                //  "<size=25><pos=-30>" += message;
                 EventHandlers.SCP_Contents.Add(message);
             }
             else if (team == Team.TUT)
             {
-              //  "<size=25><pos=-30>" += message;
+                //  "<size=25><pos=-30>" += message;
                 EventHandlers.TUT_Contents.Add(message);
             }
         }
-        public static void Add(string message)
+        public static void Add(Message message)
         {
             EventHandlers.SCP_Contents.Add(message);
             EventHandlers.CDP_And_CIContents.Add(message);
@@ -105,21 +109,22 @@ namespace TextChatXR
         }
         public static void Remove()
         {
-            EventHandlers.SCP_Contents.Remove(EventHandlers.SCP_Contents[0]);
-            EventHandlers.MTF_Contents.Remove(EventHandlers.MTF_Contents[0]);
-            EventHandlers.TUT_Contents.Remove(EventHandlers.TUT_Contents[0]);
-            EventHandlers.CDP_And_CIContents.Remove(EventHandlers.CDP_And_CIContents[0]);
+            EventHandlers.SCP_Contents.Remove(EventHandlers.SCP_Contents[EventHandlers.Deletetg]);
+            EventHandlers.MTF_Contents.Remove(EventHandlers.MTF_Contents[EventHandlers.Deletetg]);
+            EventHandlers.TUT_Contents.Remove(EventHandlers.TUT_Contents[EventHandlers.Deletetg]);
+            EventHandlers.CDP_And_CIContents.Remove(EventHandlers.CDP_And_CIContents[EventHandlers.Deletetg]);
+            EventHandlers.Deletetg += 1;
         }
         public static string GetMessage(this ArraySegment<string> arg)
         {
             string result = "";
-            for(int i = 0;i < arg.Count; i++)
+            for (int i = 0; i < arg.Count; i++)
             {
                 result += arg.ToArray()[i];
             }
             return result;
         }
-        public static string GetMessage(Player Sender, string message, ShowType ShowType = ShowType.Public)
+        public static Message GetMessage(Player Sender, string message, ShowType ShowType = ShowType.Public)
         {
             string Target = "";
             string Color = null;
@@ -151,15 +156,24 @@ namespace TextChatXR
 
                 }
                 Target += string.Concat(
-               $"<color={Color}>{Sender.Nickname}: {message}</color>");
+               message);
             }
             else
             {
                 Target += string.Concat(
-               $"{Sender.Nickname}: {message}");
+               message);
             }
-            return Target;
+            return EventHandlers.Message(Target, Sender, Color, ShowType);
         }
 
+    }
+    [Serializable]
+    public class Message
+    {
+        public string content { get; set; }
+        public Player sender { get; set; }
+        public string color { get; set; }
+        public ShowType showType { get; set; }
+       
     }
 }

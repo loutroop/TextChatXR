@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TextChatXR.Commands.SubCommands
+namespace TextChatXR.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
@@ -32,7 +32,7 @@ namespace TextChatXR.Commands.SubCommands
             Player CommandSender = Player.Get((CommandSender)sender);
 
 
-            string content = "";
+            Message content = null;
             
             if (arguments.Count == 0)
             {
@@ -57,13 +57,9 @@ namespace TextChatXR.Commands.SubCommands
 
            if(CommandSender.Team == Team.CDP || CommandSender.Team == Team.CHI)
             {
-                if (EventHandlers.CDP_And_CIContents.Count >= Plugin.CustomConfig.MaxCount)
-                {
-                    EventHandlers.CDP_And_CIContents.Clear();
-                }
                 if (EventHandlers.CDP_And_CIContents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
+                    content = Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
@@ -71,14 +67,9 @@ namespace TextChatXR.Commands.SubCommands
             }
            else if (CommandSender.Team == Team.MTF || CommandSender.Team == Team.RSC)
             {
-
-                if (EventHandlers.MTF_Contents.Count >= Plugin.CustomConfig.MaxCount)
-                {
-                    EventHandlers.MTF_Contents.Clear();
-                }
                 if (EventHandlers.MTF_Contents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
+                    content = Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
@@ -86,13 +77,9 @@ namespace TextChatXR.Commands.SubCommands
             }
            else if (CommandSender.Team == Team.SCP)
             {
-                if (EventHandlers.SCP_Contents.Count >= Plugin.CustomConfig.MaxCount)
+                if (EventHandlers.SCP_Contents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    EventHandlers.SCP_Contents.Clear();
-                }
-                if (EventHandlers.SCP_Contents.Count <= 10)
-                {
-                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
+                    content = Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
@@ -100,22 +87,17 @@ namespace TextChatXR.Commands.SubCommands
             }
            else if (CommandSender.Team == Team.TUT)
             {
-                if (EventHandlers.TUT_Contents.Count >= Plugin.CustomConfig.MaxCount)
-                {
-                    EventHandlers.TUT_Contents.Clear();
-                }
                 if (EventHandlers.TUT_Contents.Count <= Plugin.CustomConfig.MaxCount)
                 {
-                    content = "[<color=blue>Team Chat</color>]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
+                    content = Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Team);
                     Extensions.Add(content, CommandSender.Team);
                 }
                 response = "done";
                 return true;
             }
 
-            Log.Info($"[Team Chat]{CommandSender.Nickname}: {content}");
+            Log.Info($"[Team Chat]{CommandSender.Nickname}: {content.content}");
 
-            Log.Info($"[Team Chat]{CommandSender.Nickname}: {content}");
             response = "OK";
             return true;
         }

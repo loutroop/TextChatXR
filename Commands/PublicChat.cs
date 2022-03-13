@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TextChatXR.Commands.SubCommands
+namespace TextChatXR.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
@@ -28,7 +28,7 @@ namespace TextChatXR.Commands.SubCommands
             Player CommandSender = Player.Get((CommandSender)sender);
           
        
-            string content = "";
+            Message content = null;
             if (arguments.Count == 0)
             {
                 response = Plugin.CustomConfig.tips_0;
@@ -57,11 +57,11 @@ namespace TextChatXR.Commands.SubCommands
 
 
           
-            content = "[Public Chat]" + Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Public);
+            content = Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Public);
 
             Extensions.Add(content);
 
-            Log.Info($"[Public Chat]{CommandSender.Nickname}: {content}");
+            Log.Info($"[Public Chat]{CommandSender.Nickname}: {content.content}");
           
             foreach(var player in Player.List)
             {
