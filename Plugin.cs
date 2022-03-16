@@ -36,9 +36,9 @@ namespace TextChatXR
             Handlers = new EventHandlers(this);
             try
             {
-                RoundEvents.Waiting += Handlers.WaitingForPlayers;
+                RoundEvents.Restart += Handlers.Restart;
+                RoundEvents.Waiting += Handlers.Waiting;
                 RoundEvents.Start += Handlers.OnRoundStarted;
-                RoundEvents.End += Handlers.OnRoundEnded;
             }
             catch (Exception e)
             {
@@ -50,9 +50,9 @@ namespace TextChatXR
         {
             try
             {
-                RoundEvents.Waiting -= Handlers.WaitingForPlayers;
+                RoundEvents.Restart -= Handlers.Restart;
+                RoundEvents.Waiting -= Handlers.Waiting;
                 RoundEvents.Start -= Handlers.OnRoundStarted;
-                RoundEvents.End -= Handlers.OnRoundEnded;
             }
             catch(Exception e)
             {

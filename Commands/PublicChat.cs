@@ -1,5 +1,4 @@
 ﻿using CommandSystem;
-using Qurre;
 using Qurre.API;
 using System;
 using System.Collections.Generic;
@@ -10,32 +9,38 @@ using System.Threading.Tasks;
 namespace TextChatXR.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class PublicChat : ICommand
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    internal class PublicChat : ICommand
     {
-        public  string Command { get; } = "publicchat";
+        public string Command => "PublicChat";
 
-        public string[] Aliases { get; } = new string[] { "pc" };
+        public string[] Aliases => new string[] { "pc"};
 
-        public string Description { get; } = "Text Chat for public";
-
-        public EventHandlers ev;
-      
+        public string Description => "";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            Player CommandSender = Player.Get((CommandSender)sender);
-          
-       
-            Message content = null;
+            Player player = Player.Get((CommandSender)sender);
             if (arguments.Count == 0)
             {
                 response = Plugin.CustomConfig.tips_0;
                 return false;
             }
 
-            foreach (var str in Plugin.CustomConfig.BlockWords)
+            if (player.Role == RoleType.Spectator)
+            {
+                response = Plugin.CustomConfig.tips_1;
+                return false;
+            }
+
+            if (!Round.Started)
+            {
+                response = Plugin.CustomConfig.tips_2;
+                return false;
+            }
+
+           foreach (var str in Plugin.CustomConfig.BlockWords)
             {
                 if (arguments.Contains(str))
                 {
@@ -43,33 +48,9 @@ namespace TextChatXR.Commands
                     return false;
                 }
             }
-
-            if (CommandSender.Team == Team.RIP)
-            {
-                response = Plugin.CustomConfig.tips_1;
-                return false;
-            }
-            if (!Round.Started)
-            {
-                response = Plugin.CustomConfig.tips_2;
-                return false;
-            }
-
-
-          
-            content = Extensions.GetMessage(CommandSender, arguments.GetMessage(), ShowType.Public);
-
-            Extensions.Add(content);
-
-            Log.Info($"[Public Chat]{CommandSender.Nickname}: {content.content}");
-          
-            foreach(var player in Player.List)
-            {
-                player.SendConsoleMessage("<size=25><pos=-30>" +"</size></pos>", "default");
-            }
-            response = "OK";
+            Extensions.Add(MessageType.Public, player, arguments);
+            response = "You sent the message{Public Chat} successfully!";
             return true;
         }
-
     }
 }
