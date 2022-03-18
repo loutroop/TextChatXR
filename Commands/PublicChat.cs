@@ -48,7 +48,7 @@ namespace TextChatXR.Commands
                     return false;
                 }
             }
-            Extensions.Add(MessageType.Public, player, arguments);
+            Extensions.Add(MessageType.Public, player, CampType.None,arguments);
             response = "You sent the message{Public Chat} successfully!";
             return true;
         }

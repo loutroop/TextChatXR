@@ -9,35 +9,26 @@ namespace TextChatXR
 {
     public static  class Extensions
     {
-        public static void Add(MessageType messageType, Player Sender,ArraySegment<string> Args)
+        public static void Add(MessageType messageType, Player Sender, CampType Camp, ArraySegment<string> Args)
         {
+            if (messageType == MessageType.Team && Camp == CampType.None) return;
             string newtext = "";
             string[] mark = Args.ToArray();
             for (int i = 0; i < Args.Count; i++)
             {
                 newtext += mark[i];
             }
-            if (messageType == MessageType.Public)
-            {
-                EventHandlers.MessagePairs[CampType.Total.ToString()].Add(new Message(newtext, Sender, messageType, Sender.Role));
-                EventHandlers.MessagePairs[CampType.Hostile.ToString()].Add(new Message(newtext, Sender, messageType, Sender.Role));
-                EventHandlers.MessagePairs[CampType.Containment.ToString()].Add(new Message(newtext, Sender, messageType, Sender.Role));
-                EventHandlers.MessagePairs[CampType.SideWorker.ToString()].Add(new Message(newtext, Sender, messageType, Sender.Role));
-            }
-            else
-            {
-                return;
-            }
+            if (messageType == MessageType.Public) EventHandlers.Messages.Add(new Message(newtext, Sender, messageType, CampType.None));
+            else EventHandlers.Messages.Add(new Message(newtext, Sender, messageType, Camp));
         }
-        public static void Add(CampType camp, Player Sender,ArraySegment<string> Args)
+        public static List<Message> GetMessages(Player player)
         {
-            string newtext = "";
-            string[] mark = Args.ToArray();
-            for (int i = 0;i < Args.Count; i++)
+            List<Message> Messages = new List<Message>();
+            for (int i = 0;i < EventHandlers.Messages.Count; i++)
             {
-                newtext += mark[i];
+                Messages.Add(EventHandlers.Messages.Where(x => x.Camp == player.GetCamp()).ToList()[i]);
             }
-            EventHandlers.MessagePairs[camp.ToString()].Add(new Message(newtext, Sender, MessageType.Team));
+            return Messages;
         }
         public static void BroadcastMessages(Player player, bool isHint)
         {
@@ -47,27 +38,7 @@ namespace TextChatXR
                 else player.Broadcast(Build(GetMessages(player)).ToString(), 1);
             }
         }
-        public static List<Message> GetMessages(Player player)
-        {
-            if (player.Team == Team.CDP || player.Team == Team.CHI)
-            {
-                return EventHandlers.MessagePairs[CampType.Hostile.ToString()];
-            }
-            else if (player.Team == Team.SCP)
-            {
-                return EventHandlers.MessagePairs[CampType.Containment.ToString()];
-            }
-            else if (player.Team == Team.MTF || player.Team == Team.RSC)
-            {
-                return EventHandlers.MessagePairs[CampType.SideWorker.ToString()];
-            }
-            else if (player.Team == Team.TUT)
-            {
-                return EventHandlers.MessagePairs[CampType.Total.ToString()];
-            }
-            return null;
-        }
-        public static CampType GetCamp(Player player)
+        public static CampType GetCamp(this Player player)
         {
             if (player.Team == Team.CDP || player.Team == Team.CHI)
             {

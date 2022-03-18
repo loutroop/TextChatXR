@@ -48,7 +48,7 @@ namespace TextChatXR.Commands
                     return false;
                 }
             }
-            Extensions.Add(Extensions.GetCamp(player), player, arguments);
+            Extensions.Add(MessageType.Team, player, player.GetCamp(),arguments);
             response = "You sent the message[Team Chat] successfully!";
             return true;
         }

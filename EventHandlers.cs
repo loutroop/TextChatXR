@@ -12,17 +12,13 @@ namespace TextChatXR
     {
         public readonly Plugin plugin;
         public EventHandlers(Plugin plugin) =>this.plugin = plugin;
-        public static Dictionary<string, List<Message>>MessagePairs = new Dictionary<string, List<Message>>();
+        public static List<Message> Messages = new List<Message>();
        public void Waiting()
         {
-            MessagePairs.Clear();
+            Messages.Clear();
         }
         public void OnRoundStarted()
         {
-            MessagePairs.Add(CampType.Containment.ToString(), new List<Message>());
-            MessagePairs.Add(CampType.SideWorker.ToString(), new List<Message>());
-            MessagePairs.Add(CampType.Hostile.ToString(), new List<Message>());
-            MessagePairs.Add(CampType.Total.ToString(), new List<Message>());
             Timing.RunCoroutine(BroadcastMessages(), "BroadcastMessage");
         }
         public void Restart()

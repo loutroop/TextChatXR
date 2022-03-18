@@ -31,24 +31,24 @@ namespace TextChatXR
         internal string Text = "";
         internal Player Author;
         internal MessageType Type = MessageType.Public;
-        internal RoleType Role = RoleType.None;
+        internal CampType Camp = CampType.None;
         internal Player PrivateTo;
         internal Vector3 Position;
-        public Message(string text, Player author, MessageType type, RoleType role = RoleType.None, Player privateTo = null)
+        public Message(string text, Player author, MessageType type, CampType camp = CampType.None, Player privateTo = null)
         {
             Text = text;
             Author = author;
             Type = type;
-            Role = role;
+            Camp = camp;
             PrivateTo = privateTo;
             Date = DateTime.Now;
         }
-        public Message(string text, Player author, MessageType type,  Vector3 pos, RoleType role = RoleType.None, Player privateTo = null)
+        public Message(string text, Player author, MessageType type,  Vector3 pos, CampType camp = CampType.None, Player privateTo = null)
         {
             Text = text;
             Author = author;
             Type = type;
-            Role = role;
+            Camp = camp;
             PrivateTo = privateTo;
             Date = DateTime.Now;
             Position = pos;
