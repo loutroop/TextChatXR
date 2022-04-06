@@ -79,7 +79,7 @@ namespace TextChatXR
         public static string GetText(Message message)
         {
             string str;
-            str = string.Concat($"[{message.Type}]<color={GetColor(message.Author.Role)}>{message.Author}</color>: {message.Text}({(message.Date - DateTime.UtcNow).TotalSeconds < 10})");
+            str = string.Concat($"[{message.Type}]<color={GetColor(message.Author.Role)}>{message.Author.Nickname}</color>: {message.Text}({(message.Date - DateTime.UtcNow).TotalSeconds < 10})");
             return str;
         }
         public static string Build(List<Message> messages)
@@ -87,7 +87,7 @@ namespace TextChatXR
             string str = "";
             for (int i = 0; i < messages.Count; i++)
             {
-                if ((messages[i].Date - DateTime.UtcNow).TotalSeconds < 10) continue;
+                if (!((messages[i].Date - DateTime.UtcNow).TotalSeconds < 10)) continue;
                 str += string.Concat($"{GetText(messages[i])}");
                 str += "\n";
             }
